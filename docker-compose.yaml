@@ -10,16 +10,16 @@ x-airflow-common:
   volumes:
     - ./dags:/opt/airflow/dags
     - ./requirements.txt:/requirements.txt
-  command: >
-    bash -c "
-    pip install --no-cache-dir -r /requirements.txt &&
-    airflow db init &&
-    airflow users create --username airflow --password airflow \
-      --firstname Admin --lastname User --role Admin \
-      --email admin@example.com || true &&
-    airflow webserver &
-    airflow scheduler
-    "
+  command:
+    - bash
+    - -c
+    - |
+      set -e
+      pip install --no-cache-dir -r /requirements.txt
+      airflow db init
+      airflow users create --username airflow --password airflow --firstname Admin --lastname User --role Admin --email admin@example.com || true
+      airflow webserver &
+      exec airflow scheduler
 
 services:
   airflow:
