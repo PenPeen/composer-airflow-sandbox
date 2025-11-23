@@ -1,8 +1,8 @@
 x-airflow-common:
   &airflow-common
-  image: apache/airflow:2.8.1
+  image: apache/airflow:2.8.1-python3.11
   environment:
-    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__CORE__EXECUTOR: SequentialExecutor
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
