@@ -1,0 +1,28 @@
+x-airflow-common:
+  &airflow-common
+  image: apache/airflow:2.8.1
+  environment:
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth'
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./requirements.txt:/requirements.txt
+  command: >
+    bash -c "
+    pip install --no-cache-dir -r /requirements.txt &&
+    airflow db init &&
+    airflow users create --username airflow --password airflow \
+      --firstname Admin --lastname User --role Admin \
+      --email admin@example.com || true &&
+    airflow webserver &
+    airflow scheduler
+    "
+
+services:
+  airflow:
+    <<: *airflow-common
+    ports:
+      - "8080:8080"
